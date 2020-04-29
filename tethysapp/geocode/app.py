@@ -29,6 +29,10 @@ class Geocode(TethysAppBase):
                 url='geocode',
                 controller='geocode.controllers.home'
             ),
-        )
+            UrlMap(
+                name='upload_file',
+                url='geocode/upload_file',
+                controller='geocode.controllers.upload_file')
+            )
 
         return url_maps

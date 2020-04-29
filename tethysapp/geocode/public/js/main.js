@@ -11,8 +11,69 @@
 //req.send(formData);
 
 
+
+
 var mymap = L.map('map').setView([40.247070, -111.647921], 10);
 L.esri.basemapLayer('NationalGeographic').addTo(mymap);
+
+
+L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 32,
+    id: 'mapbox/streets-v11',
+    accessToken: 'pk.eyJ1IjoiYWJoaXNoZWthbWFsMTgiLCJhIjoiY2s1eTVxNGExMmQ5MDNubjExaWY5MjdvbSJ9.3nmdjWZmUCDNyRdlPo5gbg'
+}).addTo(mymap);
+
+/*
+****** FU1NCTION NAME: addDefaultBehaviorToAjax *********
+****** FUNCTION PURPOSE: make dynamic ajax requests *********
+*/
+var addDefaultBehaviorToAjax = function () {
+    // Add CSRF token to appropriate ajax requests
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!checkCsrfSafe(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"))
+            }
+        }
+    })
+}
+/*
+****** FU1NCTION NAME: checkCsrfSafe *********
+****** FUNCTION PURPOSE: CHECK THE OPERATIONS THAT DOES NOT NEED A CSRF VERIFICATION *********
+*/
+var checkCsrfSafe = function (method) {
+    // these HTTP methods do not require CSRF protection
+    return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method)
+}
+/*
+****** FU1NCTION NAME: getCookie *********
+****** FUNCTION PURPOSE: Retrieve a cookie value from the csrf token *********
+*/
+var getCookie = function (name) {
+    var cookie
+    var cookies
+    var cookieValue = null
+    var i
+    if (document.cookie && document.cookie !== "") {
+        cookies = document.cookie.split(";")
+        for (i = 0; i < cookies.length; i += 1) {
+            cookie = $.trim(cookies[i])
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                )
+                break
+            }
+        }
+    }
+    return cookieValue
+}
+
+addDefaultBehaviorToAjax();
+var staticPath = baseStatic;
+var apiServer = `${staticPath.replace("/static", "/apps")}`;
 
 // var mymap = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
 //     maxZoom: 20,
@@ -423,7 +484,7 @@ document.getElementById('downloads').addEventListener('click', function () {
     var universalBOM = "\uFEFF";
     var a = window.document.createElement('a');
     a.setAttribute('href', 'data:text/csv; charset=utf-8,' + encodeURIComponent(universalBOM + downloads.toString()));
-    a.setAttribute('download', 'example.csv');
+    a.setAttribute('download', 'output.csv');
     window.document.body.appendChild(a);
     a.click();
 });
@@ -469,3 +530,99 @@ document.getElementById('downloads').addEventListener('click', function () {
 //         return feature.properties.show_on_map;
 //     }
 // }).addTo(mymap);
+
+//
+
+/*
+************ FUNCTION NAME : CREATE_GROUP_HYDROSERVERS
+************ PURPOSE : CREATES A GROUP OF HYDRSOERVERS AND ADDS IT TO THE MENU
+*/
+
+//  create_group_hydroservers = function(){
+//     //CHECKS IF THE INPUT IS EMPTY ///
+//     if($("#addGroup-title").val() == ""){
+//       $modalAddGroupHydro.find(".warning").html(  "<b>Please enter a title. This field cannot be blank.</b>")
+//       return false
+//     }
+//     else {
+//       $modalAddGroupHydro.find(".warning").html("")
+//     }
+
+//     //CHECKS IF THERE IS AN INPUT THAT IS NOT ALLOWED//
+//     if ($("#addGroup-title").val() != "") {
+//       var regex = new RegExp("^(?![0-9]*$)[a-zA-Z0-9_]+$")
+//       var title = $("#addGroup-title").val()
+//       if (!regex.test(title)) {
+//         $modalAddGroupHydro
+//         .find(".warning")
+//         .html("<b>Please note that only numbers and other characters besides the underscore ( _ ) are not allowed</b>");
+//     return false
+// }
+// }
+// else {
+//   $modalAddGroupHydro.find(".warning").html("");
+// }
+
+//CHECKS IF THERE IS AN EMPTY DESCRIPTION //
+// if($("#addGroup-description").val() == ""){
+// $modalAddGroupHydro.find(".warning").html(  "<b>Please enter a description for this group. This field cannot be blank.</b>")
+// return false
+// }
+// else {
+// $modalAddGroupHydro.find(".warning").html("")
+// }
+//MAKE THE AJAX REQUEST///
+let elementForm = $("#modalAddGroupServerForm");
+let datastring = elementForm.serialize();
+console.log(typeof (datastring));
+console.log(datastring);
+$("#soapAddLoading").removeClass("hidden");
+// $("#btn-add-addHydro").hide();
+
+$.ajax({
+    type: "GET",
+    url: `${apiServer}/upload_file/`,
+    dataType: "text",
+    data: datastring,
+    success: function (result) { }
+})
+              //Returning the geoserver layer metadata from the controller
+            //   var json_response = JSON.parse(result)
+
+            //   let group=json_response
+            //   if(group.message !== "There was an error while adding th group.") {
+            //     let title=group.title;
+            //     let description=group.description;
+
+            //     let newHtml = `<li class="ui-state-default" id="${title}">
+            //     <input class="chkbx-layer" type="checkbox" checked><span class="group-name">${title}</span>
+            //     <div>
+            //       <button class="btn btn-warning" data-toggle="modal" data-target="#modalInterface"> <span class="glyphicon glyphicon-option-vertical"></span> </button>
+            //     </div>
+            //     </li>`
+
+            //     $(newHtml).appendTo("#current-Groupservers");
+
+            //     let li_object = document.getElementById(`${title}`);
+            //     console.log("hola");
+            //     // console.log(li_object.children[0]);
+            //     let input_check = li_object.children[0];
+            //     console.log(input_check);
+            //     if(input_check.checked){
+            //       load_individual_hydroservers_group(title);
+            //     }
+
+                // input_check.addEventListener("change", function(){
+                //     console.log(this);
+                //     if(this.checked){
+                //       console.log(" it is checked");
+                //       load_individual_hydroservers_group(title);
+
+                //     }
+                //     else{
+                //       // delete the lsit of hydroservers being display // make a function to delete it
+                //       console.log("it is not checked");
+                //       remove_individual_hydroservers_group(title);
+                //     }
+
+                //   }); 
