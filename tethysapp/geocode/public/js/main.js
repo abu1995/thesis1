@@ -330,7 +330,21 @@ function readSingleFile(evt) {
 
 
 
-            L.polyline(contentData4).addTo(mymap);
+            // L.polyline(contentData4, {snakingSpeed: 400, color: 'orange'}).addTo(mymap).snakeIn();
+
+            L.motion.polyline(contentData4, {
+                color: "orange"
+            }, {
+                auto: true,
+                duration: 10000,
+                easing: L.Motion.Ease.linear
+            }, {
+                removeOnEnd: true,
+                showMarker: true,
+                icon: L.divIcon({html: "<i class='fa fa-tint fa-2x' aria-hidden='true'></i>", iconSize: L.point(27.5, 24)})
+            }).addTo(mymap);
+
+            // L.motion.polyline([], options, motionOptions, markerOptions).addTo(mymap);
 
             function onMapClick(latLng) {
                 marker = new L.marker(latLng, { draggable: 'true' });
@@ -353,8 +367,22 @@ function readSingleFile(evt) {
                         return value;
                     })
                     downloads = contentData4;
-                    L.polyline(contentData4).addTo(mymap);
+
+                    L.motion.polyline(contentData4, {
+                        color: "orange"
+                    }, {
+                        auto: true,
+                        duration: 10000,
+                        easing: L.Motion.Ease.linear
+                    }, {
+                        removeOnEnd: true,
+                        showMarker: true,
+                        icon: L.divIcon({html: "<i class='fa fa-tint fa-2x' aria-hidden='true'></i>", iconSize: L.point(27.5, 24)})
+                    }).addTo(mymap);
+        
+                //     L.polyline(contentData4, {snakingSpeed: 400, color: 'orange'}).addTo(mymap).snakeIn();
                 });
+                
 
                 mymap.addLayer(marker);
             };
