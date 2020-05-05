@@ -5,7 +5,7 @@ from tethys_sdk.gizmos import Button
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 
-auth = HydroShareAuthBasic(username='abhishekamal18', password=' ')
+auth = HydroShareAuthBasic(username='abhishekamal18@gmail.com', password='')
 
 hs =HydroShare(auth=auth)    
 
@@ -104,5 +104,5 @@ def upload_file(request):
     extra_metadata = '{"key-1": "value-1", "key-2": "value-2"}'
     resource_id = hs.createResource(rtype, title, resource_file=fpath, keywords=keywords, abstract=abstract, metadata=metadata, extra_metadata=extra_metadata)
 
-    resource_id = hs.addResourceFile('34df2bf1c1f34c05ba7d1ef4c09d9690', fpath)
+    resource_id = hs.addResourceFile('99319811b9c44f03aa14f47a32aa4111', fpath)
 
